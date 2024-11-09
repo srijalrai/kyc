@@ -1,0 +1,57 @@
+/* src/styles/OrganisationDashboard.css */
+
+.organisation-dashboard {
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    max-width: 600px;
+  }
+  
+  .request-card {
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .request-card h4 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .accept-button, .reject-button {
+    padding: 8px 15px;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .accept-button {
+    background-color: #28a745;
+  }
+  
+  .reject-button {
+    background-color: #dc3545;
+  }
+  
+  .accept-button:hover {
+    background-color: #218838;
+  }
+  
+  .reject-button:hover {
+    background-color: #c82333;
+  }
+  
