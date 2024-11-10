@@ -2,18 +2,38 @@ import React, { useState } from 'react';
 import '../styles/CustomerRegistration.css';
 import '../styles/Common.css';
 
-export default function CustomerRegistration({ contract, account }) {
+export default function CustomerRegistration({ contractInstance, web3, account }) {
   const [name, setName] = useState('');
   const [aadhar, setAadhar] = useState('');
   const [pan, setPan] = useState('');
   const [bankAddress, setBankAddress] = useState('');
 
   const registerCustomer = async () => {
+    if (!contractInstance) {
+      alert("Contract is not properly initialized.");
+      return;
+    }
+
     try {
-      const dataHash = `${aadhar}${pan}`; // Simple concatenation for the hash
-      await contract.methods.newCustomer(name, dataHash, bankAddress).send({ from: account });
-      alert("Customer registered successfully!");
+        const gasPrice = await web3.eth.getGasPrice();
+        // const contractAddress = "0x57062b840B7f790ff8A98cd8159922Ed9243bfdD";
+        const contractAddress = "0x3AD335cd8ce489fdF61043607dc79e7fAee9D909";
+
+        const dataHash = `${aadhar}${pan}`; // Simple concatenation for the hash
+        // Create the transaction object with legacy gas pricing
+        const tx = {
+          from: account,
+          to: contractAddress,
+          gas: 200000,           // Estimate the required gas limit
+          gasPrice: gasPrice,    // Legacy gas pricing, non-EIP-1559
+          data: contractInstance.methods.newCustomer(name, dataHash, bankAddress).encodeABI(), // Encoded method call
+        };
+  
+        // Send the transaction
+        await web3.eth.sendTransaction(tx);
+        alert("Customer registered successfully!");
     } catch (error) {
+      alert("Registration failed: " + error.message);
       console.error("Registration failed:", error);
     }
   };
