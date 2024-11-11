@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import '../styles/OrganisationDashboard.css';
 import '../styles/Common.css';
 
-export default function OrganisationDashboard({ contract, account }) {
+export default function OrganisationDashboard({ contractInstance, web3, account }) {
   const [requests, setRequests] = useState([]);
 
   const fetchRequests = async () => {
     try {
-      const requestList = await contract.methods.viewRequests().call({ from: account });
+    const requestList = await contractInstance.methods.viewRequests().call({ from: account, gas: 500000 });
       setRequests(requestList);
+      console.log(requestList);
     } catch (error) {
       console.error("Failed to fetch requests:", error);
     }
@@ -16,7 +17,20 @@ export default function OrganisationDashboard({ contract, account }) {
 
   const acceptRequest = async (custAddress) => {
     try {
-      await contract.methods.changeStatusToAccepted(custAddress).send({ from: account });
+      const gasPrice = await web3.eth.getGasPrice();
+      const contractAddress = "0x3AD335cd8ce489fdF61043607dc79e7fAee9D909";
+      // Create the transaction object with legacy gas pricing
+      const tx = {
+        from: account,
+        to: contractAddress,
+        gas: 200000,           // Estimate the required gas limit
+        gasPrice: gasPrice,    // Legacy gas pricing, non-EIP-1559
+        data: contractInstance.methods.changeStatusToAccepted(custAddress).encodeABI(), // Encoded method call
+      };
+
+      // Send the transaction
+      await web3.eth.sendTransaction(tx);
+      // await contractInstance.methods.changeStatusToAccepted(custAddress).send({ from: account });
       alert("Request accepted!");
       fetchRequests(); // Refresh the requests list
     } catch (error) {
@@ -26,7 +40,20 @@ export default function OrganisationDashboard({ contract, account }) {
 
   const rejectRequest = async (custAddress) => {
     try {
-      await contract.methods.changeStatusToRejected(custAddress).send({ from: account });
+      const gasPrice = await web3.eth.getGasPrice();
+      const contractAddress = "0x3AD335cd8ce489fdF61043607dc79e7fAee9D909";
+      // Create the transaction object with legacy gas pricing
+      const tx = {
+        from: account,
+        to: contractAddress,
+        gas: 200000,           // Estimate the required gas limit
+        gasPrice: gasPrice,    // Legacy gas pricing, non-EIP-1559
+        data: contractInstance.methods.changeStatusToRejected(custAddress).encodeABI(), // Encoded method call
+      };
+
+      // Send the transaction
+      await web3.eth.sendTransaction(tx);
+      // await contractInstance.methods.changeStatusToRejected(custAddress).send({ from: account });
       alert("Request rejected!");
       fetchRequests(); // Refresh the requests list
     } catch (error) {
@@ -36,7 +63,7 @@ export default function OrganisationDashboard({ contract, account }) {
 
   useEffect(() => {
     fetchRequests();
-  }, [contract, account]);
+  }, [contractInstance, account]);
 
   return (
     <div className="organisation-dashboard">

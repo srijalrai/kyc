@@ -15,7 +15,7 @@ export default function OrganisationRegistration({ contractInstance, web3, accou
 
     try {
         const gasPrice = await web3.eth.getGasPrice();
-        const contractAddress = "0x3ca2560903380f3822aba98FA93F28293F0D6066";
+        const contractAddress = "0x3AD335cd8ce489fdF61043607dc79e7fAee9D909";
         // Create the transaction object with legacy gas pricing
         const tx = {
           from: account,
@@ -27,6 +27,8 @@ export default function OrganisationRegistration({ contractInstance, web3, accou
   
         // Send the transaction
         await web3.eth.sendTransaction(tx);
+        const isRegistered = await contractInstance.methods.isOrg().call({ from: account });
+        console.log("Is Organisation Registered?", isRegistered);
         alert("Organisation registered successfully!");
     } catch (error) {
       alert("Registration failed: " + error.message);
