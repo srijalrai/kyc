@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../styles/OrganisationDashboard.css';
 import '../styles/Common.css';
 
-export default function OrganisationDashboard({ contractInstance, web3, account }) {
+export default function OrganisationDashboard({ contractInstance, web3, account, contractAddress }) {
   const [requests, setRequests] = useState([]);
 
   const fetchRequests = async () => {
@@ -18,7 +18,7 @@ export default function OrganisationDashboard({ contractInstance, web3, account 
   const acceptRequest = async (custAddress) => {
     try {
       const gasPrice = await web3.eth.getGasPrice();
-      const contractAddress = "0x3AD335cd8ce489fdF61043607dc79e7fAee9D909";
+      // const contractAddress = "0x027E6C639eCC0dDB9487cc5Db53905FcEe177cC4";
       // Create the transaction object with legacy gas pricing
       const tx = {
         from: account,
@@ -41,7 +41,7 @@ export default function OrganisationDashboard({ contractInstance, web3, account 
   const rejectRequest = async (custAddress) => {
     try {
       const gasPrice = await web3.eth.getGasPrice();
-      const contractAddress = "0x3AD335cd8ce489fdF61043607dc79e7fAee9D909";
+      // const contractAddress = "0x027E6C639eCC0dDB9487cc5Db53905FcEe177cC4";
       // Create the transaction object with legacy gas pricing
       const tx = {
         from: account,

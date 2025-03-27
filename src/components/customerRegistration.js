@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/CustomerRegistration.css';
 import '../styles/Common.css';
 
-export default function CustomerRegistration({ contractInstance, web3, account }) {
+export default function CustomerRegistration({ contractInstance, web3, account, contractAddress }) {
   const [name, setName] = useState('');
   const [aadhar, setAadhar] = useState('');
   const [pan, setPan] = useState('');
@@ -17,7 +17,7 @@ export default function CustomerRegistration({ contractInstance, web3, account }
     try {
         const gasPrice = await web3.eth.getGasPrice();
         // const contractAddress = "0x57062b840B7f790ff8A98cd8159922Ed9243bfdD";
-        const contractAddress = "0x3AD335cd8ce489fdF61043607dc79e7fAee9D909";
+        // const contractAddress = "0x027E6C639eCC0dDB9487cc5Db53905FcEe177cC4";
 
         const dataHash = `${aadhar}${pan}`; // Simple concatenation for the hash
         // Create the transaction object with legacy gas pricing
