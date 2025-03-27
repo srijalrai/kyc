@@ -8,15 +8,14 @@ import CustomerDashboard from './components/customerDashboard';
 import OrganisationDashboard from './components/organisationDashboard';
 import KycContractABI from './kycContractABI.json';
 
-const web3 = new Web3(window.ethereum); // Ensure Metamask is connected
-const contractAddress = "0x3ca2560903380f3822aba98FA93F28293F0D6066"; // Replace with your actual deployed contract address
-const contract = new web3.eth.Contract(KycContractABI.abi, contractAddress);
+const web3 = new Web3(window.ethereum); // Ensure Metamask is connected // Replace with your actual deployed contract address
 
 const App = () => {
   const [currentView, setCurrentView] = useState("customerRegistration");
   const [account, setAccount] = useState("");
   const [web3, setWeb3] = useState(null);
   const [contractInstance, setContractInstance] = useState(null);
+  const [contractAddress, setContractAddress] = useState(null);
   console.log(typeof(KycContractABI));
 
   // Function to connect to Metamask
@@ -27,7 +26,8 @@ const App = () => {
         setAccount(accounts[0]);
         const web3Instance = new Web3(window.ethereum);
         setWeb3(web3Instance);
-        const contractAddress = "0x3ca2560903380f3822aba98FA93F28293F0D6066"; // Replace with your deployed contract address
+        const contractAddress = "0xe8eCBA2D9f31f4D3D22AdC378D820851498df2E1";
+        setContractAddress(contractAddress); // Replace with your deployed contract address
         const contractInstance = new web3Instance.eth.Contract(KycContractABI.abi, contractAddress);
         setContractInstance(contractInstance);
       } catch (error) {
@@ -57,15 +57,15 @@ const App = () => {
   const renderView = () => {
     switch (currentView) {
       case "customerRegistration":
-        return <CustomerRegistration account={account} contractInstance={contractInstance}/>;
+        return <CustomerRegistration account={account} web3={web3} contractInstance={contractInstance} contractAddress={contractAddress}/>;
       case "organisationRegistration":
-        return <OrganisationRegistration account={account} web3={web3} contractInstance={contractInstance}/>;
+        return <OrganisationRegistration account={account} web3={web3} contractInstance={contractInstance} contractAddress={contractAddress}/>;
       case "customerDashboard":
         return <CustomerDashboard account={account} contractInstance={contractInstance} />;
       case "organisationDashboard":
-        return <OrganisationDashboard account={account} contractInstance={contractInstance}/>;
+        return <OrganisationDashboard account={account} web3={web3} contractInstance={contractInstance} contractAddress={contractAddress}/>;
       default:
-        return <CustomerRegistration account={account} contractInstance={contractInstance}/>;
+        return <CustomerRegistration account={account} contractInstance={contractInstance} contractAddress={contractAddress}/>;
     }
   };
 

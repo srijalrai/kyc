@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import '../styles/CustomerDashboard.css';
 import '../styles/Common.css';
 
-export default function CustomerDashboard({ contract, account }) {
+export default function CustomerDashboard({ contractInstance, account }) {
   const [status, setStatus] = useState(null);
 
   const fetchStatus = async () => {
     try {
-      const result = await contract.methods.checkStatus().call({ from: account });
-      setStatus(result);
+      const result = await contractInstance.methods.checkStatus().call({ from: account });
+      setStatus(Number(result));
     } catch (error) {
       console.error("Error fetching status:", error);
     }
@@ -16,13 +16,13 @@ export default function CustomerDashboard({ contract, account }) {
 
   useEffect(() => {
     fetchStatus();
-  }, [contract, account]);
+  }, [contractInstance, account]);
 
   const getStatusLabel = (statusCode) => {
     switch (statusCode) {
-      case "0":
+      case 0:
         return "Accepted";
-      case "1":
+      case 1:
         return "Rejected";
       default:
         return "Pending";

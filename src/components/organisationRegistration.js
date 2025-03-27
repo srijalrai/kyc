@@ -4,7 +4,7 @@ import KycContractABI from '../kycContractABI.json';
 import '../styles/OrganisationRegistration.css';
 import '../styles/Common.css';
 
-export default function OrganisationRegistration({ contractInstance, web3, account }) {
+export default function OrganisationRegistration({ contractInstance, web3, account, contractAddress }) {
   const [orgName, setOrgName] = useState('');
 
   const registerOrganisation = async () => {
@@ -15,24 +15,29 @@ export default function OrganisationRegistration({ contractInstance, web3, accou
 
     try {
         const gasPrice = await web3.eth.getGasPrice();
-        const contractAddress = "0x3ca2560903380f3822aba98FA93F28293F0D6066";
-        // Create the transaction object with legacy gas pricing
+        // const contractAddress = "0x027E6C639eCC0dDB9487cc5Db53905FcEe177cC4";
+
+        // Create the transaction object with Ether value
         const tx = {
           from: account,
           to: contractAddress,
-          gas: 200000,           // Estimate the required gas limit
-          gasPrice: gasPrice,    // Legacy gas pricing, non-EIP-1559
-          data: contractInstance.methods.newOrganisation(orgName).encodeABI(), // Encoded method call
+          gas: 200000,           
+          gasPrice: gasPrice,    
+          value: Web3.utils.toWei('1', 'ether'),  // Sending 1 Ether as required by the contract
+          data: contractInstance.methods.newOrganisation(orgName).encodeABI(), 
         };
-  
+
         // Send the transaction
         await web3.eth.sendTransaction(tx);
+        const isRegistered = await contractInstance.methods.isOrg().call({ from: account });
+        console.log("Is Organisation Registered?", isRegistered);
         alert("Organisation registered successfully!");
     } catch (error) {
       alert("Registration failed: " + error.message);
       console.error("Registration failed:", error);
     }
-  };
+};
+
 
   return (
     <div className="organisation-registration">
