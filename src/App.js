@@ -26,7 +26,7 @@ const App = () => {
         setAccount(accounts[0]);
         const web3Instance = new Web3(window.ethereum);
         setWeb3(web3Instance);
-        const contractAddress = "0x019F053eB2a48d414c5BcAB35f1539E45923a794";
+        const contractAddress = "0x44D6C0facB16d489396094d57045fE9ceA4923A5";
         setContractAddress(contractAddress); // Replace with your deployed contract address
         const contractInstance = new web3Instance.eth.Contract(KycContractABI.abi, contractAddress);
         setContractInstance(contractInstance);

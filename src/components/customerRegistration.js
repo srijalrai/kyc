@@ -25,9 +25,9 @@ export default function CustomerRegistration({ contractInstance, web3, account, 
       const tx = {
         from: account,
         to: contractAddress,
-        gas: 200000,           // Estimate the required gas limit
+        gas: 500000,           // Estimate the required gas limit
         gasPrice: gasPrice,    // Legacy gas pricing, non-EIP-1559
-        data: contractInstance.methods.newCustomer(name, dataHash, bankAddress).encodeABI(), // Encoded method call
+        data: contractInstance.methods.newCustomer(name, aadhar, pan, dataHash, bankAddress).encodeABI(), // Encoded method call
       };
 
       // Send the transaction
