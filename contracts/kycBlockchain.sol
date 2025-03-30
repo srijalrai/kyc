@@ -1,4 +1,10 @@
+pragma experimental ABIEncoderV2;
 pragma solidity >=0.4.21 <0.7.0;
+
+struct BankInfo {
+    string b_name;
+    address bankAddress;
+}
 
 interface KYC_Functions {
     enum Status {
@@ -215,5 +221,19 @@ contract KycBlockChain is KYC_Functions {
         // added 'override'
         require(isOrg(), "Not an Organisation");
         return allCustomers[_address].c_name;
+    }
+
+    function getBanks() public view returns (BankInfo[] memory) {
+        BankInfo[] memory banksList = new BankInfo[](Banks.length);
+
+        for (uint i = 0; i < Banks.length; i++) {
+            address bankAddr = Banks[i];
+            banksList[i] = BankInfo({
+                b_name: allOrganisations[bankAddr].b_name,
+                bankAddress: bankAddr
+            });
+        }
+
+        return banksList;
     }
 }
