@@ -6,6 +6,13 @@ struct BankInfo {
     address bankAddress;
 }
 
+struct CustomerRequest {
+    address customerAddress;
+    string name;
+    string aadhar;
+    string pan;
+}
+
 interface KYC_Functions {
     enum Status {
         Accepted,
