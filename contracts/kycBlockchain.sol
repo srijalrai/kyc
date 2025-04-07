@@ -1,4 +1,17 @@
+pragma experimental ABIEncoderV2;
 pragma solidity >=0.4.21 <0.7.0;
+
+struct BankInfo {
+    string b_name;
+    address bankAddress;
+}
+
+struct CustomerRequest {
+    address customerAddress;
+    string name;
+    string aadhar;
+    string pan;
+}
 
 interface KYC_Functions {
     enum Status {
@@ -10,6 +23,8 @@ interface KYC_Functions {
     function isCus() external view returns (bool);
     function newCustomer(
         string calldata _name,
+        string calldata _aadhar, 
+        string calldata _pan,
         string calldata _hash,
         address _bank
     ) external payable returns (bool);
@@ -43,6 +58,8 @@ contract KycBlockChain is KYC_Functions {
 
     struct Customer {
         string c_name;
+        string aadhar;
+        string pan;
         string data_hash;
         address bank_address;
         bool exists;
@@ -78,6 +95,8 @@ contract KycBlockChain is KYC_Functions {
 
     function newCustomer(
         string memory _name,
+        string calldata _aadhar, 
+        string calldata _pan,
         string memory _hash,
         address _bank
     ) public payable override returns (bool) {
@@ -85,6 +104,8 @@ contract KycBlockChain is KYC_Functions {
         require(!isCus(), "Customer Already Exists!");
         require(allOrganisations[_bank].exists, "No such Bank!");
         allCustomers[msg.sender].c_name = _name;
+        allCustomers[msg.sender].aadhar = _aadhar;
+        allCustomers[msg.sender].pan = _pan;
         allCustomers[msg.sender].data_hash = _hash;
         allCustomers[msg.sender].bank_address = _bank;
         allCustomers[msg.sender].exists = true;
@@ -215,5 +236,19 @@ contract KycBlockChain is KYC_Functions {
         // added 'override'
         require(isOrg(), "Not an Organisation");
         return allCustomers[_address].c_name;
+    }
+
+    function getBanks() public view returns (BankInfo[] memory) {
+        BankInfo[] memory banksList = new BankInfo[](Banks.length);
+
+        for (uint i = 0; i < Banks.length; i++) {
+            address bankAddr = Banks[i];
+            banksList[i] = BankInfo({
+                b_name: allOrganisations[bankAddr].b_name,
+                bankAddress: bankAddr
+            });
+        }
+
+        return banksList;
     }
 }
