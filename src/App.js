@@ -18,6 +18,12 @@ const App = () => {
   const [contractAddress, setContractAddress] = useState(null);
   console.log(typeof(KycContractABI));
 
+
+  // for the displaying part
+
+  const [isCustomer, setIsCustomer] = useState(false);
+  const [isOrganisation, setIsOrganisation] = useState(false);
+
   // Function to connect to Metamask
   const connectWallet = async () => {
     if (window.ethereum) {
@@ -26,10 +32,32 @@ const App = () => {
         setAccount(accounts[0]);
         const web3Instance = new Web3(window.ethereum);
         setWeb3(web3Instance);
-        const contractAddress = "0xe8eCBA2D9f31f4D3D22AdC378D820851498df2E1";
+        const contractAddress = "0x618309738A063A7396BcABEb5Dc18e0E08191454";
         setContractAddress(contractAddress); // Replace with your deployed contract address
         const contractInstance = new web3Instance.eth.Contract(KycContractABI.abi, contractAddress);
         setContractInstance(contractInstance);
+
+
+        // Check role
+
+        const selectedAccount = accounts[0];
+
+        const isCus = await contractInstance.methods.isCus().call({ from: selectedAccount });
+        const isOrg = await contractInstance.methods.isOrg().call({ from: selectedAccount });
+        setIsCustomer(isCus);
+        setIsOrganisation(isOrg);
+
+
+        // Set default view
+        if (isOrg) {
+          setCurrentView("organisationDashboard");
+        } else if (isCus) {
+          setCurrentView("customerDashboard");
+        } else {
+          setCurrentView("customerRegistration");
+        }
+
+
       } catch (error) {
         console.error("Failed to connect to wallet:", error);
       }
@@ -83,10 +111,23 @@ const App = () => {
 
       {/* Navigation Buttons */}
       <div className="navbar">
-        <button onClick={() => setCurrentView("customerRegistration")}>Customer Registration</button>
-        <button onClick={() => setCurrentView("organisationRegistration")}>Organisation Registration</button>
-        <button onClick={() => setCurrentView("customerDashboard")}>Customer Dashboard</button>
-        <button onClick={() => setCurrentView("organisationDashboard")}>Organisation Dashboard</button>
+        {!isCustomer && !isOrganisation && (
+          <>
+            <button onClick={() => setCurrentView("customerRegistration")}>Customer Registration</button>
+            <button onClick={() => setCurrentView("organisationRegistration")}>Organisation Registration</button>
+          </>
+        )}
+        {isCustomer && (
+          <>
+            <button onClick={() => setCurrentView("customerRegistration")}>Customer Registration</button>
+            <button onClick={() => setCurrentView("customerDashboard")}>Customer Dashboard</button>
+          </>
+        )}
+        {isOrganisation && (
+          <>
+            <button onClick={() => setCurrentView("organisationDashboard")}>Organisation Dashboard</button>
+          </>
+        )}
       </div>
 
       {/* Render the selected component */}
