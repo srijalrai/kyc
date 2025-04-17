@@ -8,7 +8,12 @@ import CustomerDashboard from './components/customerDashboard';
 import OrganisationDashboard from './components/organisationDashboard';
 import KycContractABI from './kycContractABI.json';
 
-const web3 = new Web3(window.ethereum); // Ensure Metamask is connected // Replace with your actual deployed contract address
+// importing json file for automating contract address of the netweork
+import contractJson from './utils/KycBlockChain.json';
+
+
+
+// const web3 = new Web3(window.ethereum); // Ensure Metamask is connected // Replace with your actual deployed contract address
 
 const App = () => {
   const [currentView, setCurrentView] = useState("customerRegistration");
@@ -32,11 +37,26 @@ const App = () => {
         setAccount(accounts[0]);
         const web3Instance = new Web3(window.ethereum);
         setWeb3(web3Instance);
-        const contractAddress = "0x618309738A063A7396BcABEb5Dc18e0E08191454";
-        setContractAddress(contractAddress); // Replace with your deployed contract address
-        const contractInstance = new web3Instance.eth.Contract(KycContractABI.abi, contractAddress);
-        setContractInstance(contractInstance);
+        // const contractAddress = "0x80C8B2E219a9C1691ebC72f88fbCc0541aD89598";
+        // setContractAddress(contractAddress); // Replace with your deployed contract address
+        // const contractInstance = new web3Instance.eth.Contract(KycContractABI.abi, contractAddress);
+        // setContractInstance(contractInstance);
 
+
+        // contract address automating
+        const networkId = await web3Instance.eth.net.getId();
+        const deployedNetwork = contractJson.networks[networkId];
+
+        if (deployedNetwork) {
+          const instance = new web3Instance.eth.Contract(
+            contractJson.abi,
+            deployedNetwork.address
+          );
+          setContractInstance(instance);
+          setContractAddress(deployedNetwork.address);
+        } else {
+          alert("Contract not deployed on the current network.");
+        }
 
         // Check role
 
