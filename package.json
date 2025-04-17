@@ -16,6 +16,7 @@
     "web3": "^4.15.0"
   },
   "scripts": {
+    "migrate": "truffle migrate --reset",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

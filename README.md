@@ -6,6 +6,15 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+## How to run 
+
+In terminal 1 - start ganache 
+In terminal 2 - truffle compile 
+In terminal 2 - truffle migrate
+in terminal 2 - node copy-abi
+In terminal 2/3 - npm start
+
+
 ### `npm start`
 
 Runs the app in the development mode.\
